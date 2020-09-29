@@ -26,22 +26,30 @@ while (have_posts()) {
         <?php }
         ?>
 
-        <div class="page-links">
-            <h2 class="page-links__title"><a href="#"><?php echo get_the_title($parentID); ?></a></h2>
-            <ul class="min-list">
-                <?php
-                if ($parentID) {
-                    $findChildrenOf = $parentID;
-                } else {
-                    $findChildrenOf = get_the_ID();
-                }
-                wp_list_pages(array(
-                    'title_li' => NULL,
-                    'child_of' => $findChildrenOf,
-                ));
-                ?>
-            </ul>
-        </div>
+        <?php
+        $isParent = get_pages(array(
+            'child_of' => get_the_ID()
+        ));
+
+        if ($parentID or $isParent) { ?>
+            <div class="page-links">
+                <h2 class="page-links__title"><a href="<?php echo get_permalink($parentID); ?>"><?php echo get_the_title($parentID); ?></a></h2>
+                <ul class="min-list">
+                    <?php
+                    if ($parentID) {
+                        $findChildrenOf = $parentID;
+                    } else {
+                        $findChildrenOf = get_the_ID();
+                    }
+                    wp_list_pages(array(
+                        'title_li' => NULL,
+                        'child_of' => $findChildrenOf,
+                        'sort_order' => 'menu_order'
+                    ));
+                    ?>
+                </ul>
+            </div>
+        <?php } ?>
 
         <div class="generic-content">
             <?php the_content(); ?>
